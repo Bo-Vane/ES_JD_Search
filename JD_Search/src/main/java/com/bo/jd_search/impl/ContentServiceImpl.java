@@ -1,0 +1,78 @@
+package com.bo.jd_search.impl;
+
+
+import co.elastic.clients.elasticsearch._types.query_dsl.TermQuery;
+import com.bo.jd_search.service.ContentService;
+import com.bo.jd_search.util.HTMLParseUtil;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+
+@Service
+public class ContentServiceImpl implements ContentService {
+
+    private final HTMLParseUtil htmlParseUtil;
+
+    private final RestHighLevelClient client;
+
+    public ContentServiceImpl(HTMLParseUtil htmlParseUtil, RestHighLevelClient client) {
+        this.htmlParseUtil = htmlParseUtil;
+        this.client = client;
+    }
+
+
+    @Override
+    public List<Map<String, Object>> searchPage(String keyword, int pageNo, int pageSize) throws IOException {
+        if (pageNo <= 1){
+            pageNo = 1;
+        }
+
+        //条件搜索
+        SearchRequest request = new SearchRequest("jd_goods");
+        // 创建搜索源建造者对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+
+        searchSourceBuilder.from(pageNo);
+        searchSourceBuilder.size(pageSize);
+
+        // 条件采用：精确查询 通过keyword查字段name,注意这个QueryBuilders的类型，不能用spring的那个
+        TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("name", keyword);
+        searchSourceBuilder.query(termQueryBuilder);
+        searchSourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));// 60s
+
+        //执行搜索
+        request.source(searchSourceBuilder);
+        SearchResponse response = client.search(request, RequestOptions.DEFAULT);
+
+        ArrayList<Map<String,Object>> list = new ArrayList<>();
+        //解析结果,都在hits里
+        for (SearchHit hit : response.getHits().getHits()) {
+            list.add(hit.getSourceAsMap());
+        }
+
+        return list;
+    }
+
+    @Override
+    public boolean parseContent(String keyword) throws Exception {
+        return htmlParseUtil.putIntoIndex(keyword,"jd_goods");
+    }
+
+
+
+
+}

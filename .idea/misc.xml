@@ -12,4 +12,8 @@
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
+  <component name="WebPackConfiguration">
+    <option name="mode" value="AUTO" />
+    <option name="path" value="$PROJECT_DIR$/JD_Search/src/main/resources/static/js/webpath.config.js" />
+  </component>
 </project>
