@@ -1,17 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="utf-8"/>
-    <title>狂神说Java-ES仿京东实战</title>
+    <title>Java-ES仿京东实战</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
-    <script th:src="@{/js/jquery.min.js}"></script>
 </head>
-
 <body class="pg">
 <div class="page">
-    <div id="mallPage" class=" mallist tmall- page-not-market ">
-
+    <div id="app" class=" mallist tmall- page-not-market ">
         <!-- 头部搜索 -->
         <div id="header" class=" header-list-app">
             <div class="headerLayout">
@@ -20,9 +16,7 @@
                     <h1 id="mallLogo">
                         <img th:src="@{/images/jdlogo.png}" alt="">
                     </h1>
-
                     <div class="header-extra">
-
                         <!--搜索-->
                         <div id="mallSearch" class="mall-search">
                             <form name="searchTop" class="mallSearch-form clearfix">
@@ -31,27 +25,26 @@
                                     <div class="mallSearch-input clearfix">
                                         <div class="s-combobox" id="s-combobox-685">
                                             <div class="s-combobox-input-wrap">
-                                                <input type="text" autocomplete="off" value="dd" id="mq"
-                                                       class="s-combobox-input" aria-haspopup="true">
+                                                <input v-model="keyword"  type="text" autocomplete="off" id="mq"
+                                                       class="s-combobox-input"  aria-haspopup="true">
                                             </div>
                                         </div>
-                                        <button type="submit" id="searchbtn">搜索</button>
+                                        <button type="submit" @click.prevent="searchKey" id="searchbtn">搜索</button>
                                     </div>
                                 </fieldset>
                             </form>
                             <ul class="relKeyTop">
-                                <li><a>狂神说Java</a></li>
-                                <li><a>狂神说前端</a></li>
-                                <li><a>狂神说Linux</a></li>
-                                <li><a>狂神说大数据</a></li>
-                                <li><a>狂神聊理财</a></li>
+                                <li><a>BoVane Java武器库</a></li>
+                                <li><a>前端三剑客</a></li>
+                                <li><a>Linux</a></li>
+                                <li><a>大数据</a></li>
+                                <li><a>理财大亨</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
         <!-- 商品详情页面 -->
         <div id="content">
             <div class="main">
@@ -65,7 +58,7 @@
                                 </div>
                                 <div class="attrValues">
                                     <ul class="av-collapse row-2">
-                                        <li><a href="#"> 狂神说 </a></li>
+                                        <li><a href="#"> BoVane </a></li>
                                         <li><a href="#"> Java </a></li>
                                     </ul>
                                 </div>
@@ -73,7 +66,6 @@
                         </div>
                     </div>
                 </form>
-
                 <!-- 排序规则 -->
                 <div class="filter clearfix">
                     <a class="fSort fSort-cur">综合<i class="f-ico-arrow-d"></i></a>
@@ -82,29 +74,27 @@
                     <a class="fSort">销量<i class="f-ico-arrow-d"></i></a>
                     <a class="fSort">价格<i class="f-ico-triangle-mt"></i><i class="f-ico-triangle-mb"></i></a>
                 </div>
-
                 <!-- 商品详情 -->
-                <div class="view grid-nosku">
-
-                    <div class="product">
+                <div class="view grid-nosku" >
+                    <div class="product" v-for="result in results">
                         <div class="product-iWrap">
                             <!--商品封面-->
                             <div class="productImg-wrap">
                                 <a class="productImg">
-                                    <img src="https://img.alicdn.com/bao/uploaded/i1/3899981502/O1CN01q1uVx21MxxSZs8TVn_!!0-item_pic.jpg">
+                                    <img :src="result.img">
                                 </a>
                             </div>
                             <!--价格-->
                             <p class="productPrice">
-                                <em><b>¥</b>2590.00</em>
+                                <em v-text="result.price"></em>
                             </p>
                             <!--标题-->
                             <p class="productTitle">
-                                <a> dkny秋季纯色a字蕾丝dd商场同款连衣裙 </a>
+                                <a v-html="result.name"></a>
                             </p>
                             <!-- 店铺名 -->
                             <div class="productShop">
-                                <span>店铺： 狂神说Java </span>
+                                <span>店铺： Java武器库 </span>
                             </div>
                             <!-- 成交信息 -->
                             <p class="productStatus">
@@ -118,10 +108,26 @@
         </div>
     </div>
 </div>
-
+<script th:src="@{/js/vue.min.js}"></script>
+<script th:src="@{/js/axios.min.js}"></script>
 <script>
-
+    new Vue({
+        el:"#app",
+        data:{
+            "keyword": '', // 搜索的关键字
+            "results":[] // 后端返回的结果
+        },
+        methods:{
+            searchKey(){
+                var keyword = this.keyword;
+                console.log(keyword);
+                axios.get('search/'+keyword+'/1/10').then(response=>{
+                    console.log(response.data);
+                    this.results=response.data;
+                })
+            }
+        }
+    });
 </script>
-
 </body>
 </html>

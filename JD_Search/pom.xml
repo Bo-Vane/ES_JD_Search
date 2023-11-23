@@ -30,6 +30,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>org.jsoup</groupId>
@@ -58,6 +63,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.58</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -78,6 +89,23 @@
                 </configuration>
             </plugin>
         </plugins>
+
+            <resources>
+                <resource>
+                    <directory>src/main/resources</directory>
+                    <includes>
+                        <include>static/**</include>
+                        <include>templates/**</include>
+                        <include>**/*.properties</include>
+                        <include>**/*.html</include>
+                        <include>**/*.js</include>
+                        <include>**/*.css</include>
+                        <include>**/*.png</include>
+                    </includes>
+                    <filtering>false</filtering>
+                </resource>
+            </resources>
+
     </build>
 
 </project>
