@@ -28,7 +28,7 @@ public class ContentController {
 
     @GetMapping("/search/{keyword}/{pageNo}/{pageSize}")
     public List<Map<String,Object>> search(@PathVariable int pageNo, @PathVariable int pageSize, @PathVariable String keyword) throws IOException {
-        return contentService.searchPage(keyword, pageNo, pageSize);
+        return contentService.searchPageHighlight(keyword, pageNo, pageSize);
     }
 
 

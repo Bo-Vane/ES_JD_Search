@@ -10,4 +10,8 @@ public interface ContentService {
 
     //将解析数据结果放入ES
     boolean parseContent(String keyword) throws Exception;
+
+    //高亮结果字段
+    List<Map<String, Object>> searchPageHighlight(String keyword, int pageNo, int pageSize) throws IOException;
+
 }
