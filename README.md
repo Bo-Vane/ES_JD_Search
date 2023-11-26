@@ -7,6 +7,7 @@
 
 
 本人学习博客：https://bo-vane.github.io/
+项目搭建和实现过程：https://github.com/Bo-Vane/ES_JD_Search/blob/master/HELP.md
 
 
 
